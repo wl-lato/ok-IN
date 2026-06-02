@@ -1,0 +1,4 @@
+ok-script>=1.0.148
+onnxocr-ppocrv5>=0.0.18
+opencv-python>=4.13.0.92
+pyside6==6.9.1
