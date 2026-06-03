@@ -93,12 +93,12 @@ config = {
     },
     "links": {
         "default": {
-            "github": "https://github.com/ok-oldking/ok-IN",
-            "faq": "https://github.com/ok-oldking/ok-IN/blob/main/README_en.md",
+            "github": "https://github.com/wl-lato/ok-IN",
+            "faq": "https://github.com/wl-lato/ok-IN/blob/main/README_en.md",
         },
         "zh_CN": {
-            "github": "https://github.com/ok-oldking/ok-IN",
-            "faq": "https://github.com/ok-oldking/ok-IN/blob/main/README.md",
+            "github": "https://github.com/wl-lato/ok-IN",
+            "faq": "https://github.com/wl-lato/ok-IN/blob/main/README.md",
         },
     },
     "about": """
