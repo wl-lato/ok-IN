@@ -1,0 +1,114 @@
+name: Build Windows Executable
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build exe with pyappify
+    runs-on: windows-latest
+
+    env:
+      PYTHONIOENCODING: 'UTF-8'
+      SIGN_BUILD: 'false'
+
+    strategy:
+      matrix:
+        python-version: [3.12]
+
+    steps:
+      - name: Configure git
+        run: |
+          [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+          git config --global user.email "wl-lato@users.noreply.github.com"
+          git config --global user.name "wl-lato"
+
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set UTF-8 encoding
+        run: |
+          set PYTHONIOENCODING=utf-8
+          set PYTHONLEGACYWINDOWSSTDIO=utf-8
+          echo PYTHONIOENCODING=utf-8 >> $GITHUB_ENV
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: |
+          Get-ChildItem -Path ".\tests\*.py" | ForEach-Object {
+              Write-Host "Running tests in $($_.FullName)"
+              try {
+                  python -m unittest $_.FullName
+                  if ($LASTEXITCODE -ne 0) {
+                      throw "Tests failed in $($_.FullName)"
+                  }
+              } catch {
+                  Write-Error $_
+                  exit 1
+              }
+          }
+
+      - name: Check release version
+        id: release-version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $isRelease = $tag -match '^v?\d+\.\d+\.\d+$'
+          "is_release=$($isRelease.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          Write-Host "Release version: $isRelease"
+
+      - name: pyappify build-exe-only
+        id: build-exe-only
+        uses: ok-oldking/pyappify-action@master
+        with:
+          build_exe_only: false
+
+      - name: pyappify build-setup-exe
+        id: build-setup-exe
+        if: steps.release-version.outputs.is_release == 'true'
+        uses: ok-oldking/pyappify-action@master
+
+      - name: Compute SHA256
+        if: steps.release-version.outputs.is_release == 'true'
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path "pyappify_dist\*" -Include *.exe,*.zip | ForEach-Object {
+              $hash = (Get-FileHash -Path $_.FullName -Algorithm SHA256).Hash
+              "$hash  $($_.Name)" | Out-File -Append -FilePath "win32_sha256.txt" -Encoding utf8
+          }
+          Get-Content "win32_sha256.txt"
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: steps.release-version.outputs.is_release == 'true' && startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: |
+            ### 更新日志
+              ok-IN ${{ github.ref_name }} 自动构建版本
+
+            ### 下载包说明
+              * [ok-IN-win32-China-setup.exe] 完整安装包 (推荐国内用户)
+              * [ok-IN-win32.zip] 免安装绿色版，解压即用
+              * 不要下载 SourceCode.zip，那是源代码
+          draft: false
+          prerelease: false
+          files: |
+            pyappify_dist/*
+            win32_sha256.txt

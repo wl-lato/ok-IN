@@ -1,0 +1,11 @@
+src
+config.py
+main.py
+ok-IN.exe
+README.md
+README_en.md
+assets
+features
+requirements.txt
+main_debug.py
+pyappify.yml
