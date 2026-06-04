@@ -1,7 +1,6 @@
-import ok
-from src.config import config
+if __name__ == '__main__':
+    from src.config import config
+    from ok import OK
 
-if __name__ == "__main__":
-    config = config
-    ok = ok.OK(config)
+    ok = OK(config)
     ok.start()

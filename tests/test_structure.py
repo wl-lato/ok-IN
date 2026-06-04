@@ -33,6 +33,9 @@ class TestProjectStructure:
     def test_requirements_exists(self):
         assert os.path.exists("requirements.txt")
 
+    def test_features_dir_exists(self):
+        assert os.path.exists("features")
+
 
 class TestConfig:
     """Test configuration module."""
@@ -97,13 +100,22 @@ class TestSceneModule:
 
         assert INScene is not None
 
-    def test_scene_constants(self):
+    def test_scene_inherits_base_scene(self):
+        from ok import BaseScene
         from src.scene.INScene import INScene
 
-        assert hasattr(INScene, "SCENE_UNKNOWN")
-        assert hasattr(INScene, "SCENE_LOADING")
-        assert hasattr(INScene, "SCENE_IN_GAME")
-        assert hasattr(INScene, "SCENE_DAILY_WISHES")
+        assert issubclass(INScene, BaseScene)
+
+    def test_scene_has_reset(self):
+        from src.scene.INScene import INScene
+
+        assert hasattr(INScene, "reset")
+
+    def test_scene_has_hud_tracking(self):
+        from src.scene.INScene import INScene
+
+        assert hasattr(INScene, "in_hud")
+        assert hasattr(INScene, "set_in_hud")
 
 
 class TestTaskModules:
@@ -123,3 +135,19 @@ class TestTaskModules:
         from src.task.AutoLoginTask import AutoLoginTask
 
         assert AutoLoginTask is not None
+
+    def test_daily_task_inherits_base_task(self):
+        from ok import BaseTask
+        from src.task.DailyTask import DailyTask
+
+        assert issubclass(DailyTask, BaseTask)
+
+    def test_trigger_tasks_inherit_correctly(self):
+        from ok import BaseTask, TriggerTask
+        from src.task.SkipDialogTask import SkipDialogTask
+        from src.task.AutoLoginTask import AutoLoginTask
+
+        assert issubclass(SkipDialogTask, BaseTask)
+        assert issubclass(SkipDialogTask, TriggerTask)
+        assert issubclass(AutoLoginTask, BaseTask)
+        assert issubclass(AutoLoginTask, TriggerTask)

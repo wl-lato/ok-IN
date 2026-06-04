@@ -1,8 +1,8 @@
-import ok
-from src.config import config
+if __name__ == '__main__':
+    from src.config import config
+    from ok import OK
 
-if __name__ == "__main__":
-    config = config.copy()
-    config['debug'] = True
-    ok = ok.OK(config)
+    debug_config = dict(config)
+    debug_config['debug'] = True
+    ok = OK(debug_config)
     ok.start()

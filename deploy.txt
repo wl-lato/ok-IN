@@ -1,11 +1,13 @@
 src
-config.py
 main.py
 ok-IN.exe
 README.md
 README_en.md
 assets
 features
+icons
 requirements.txt
 main_debug.py
+icon.ico
+icon.png
 pyappify.yml
