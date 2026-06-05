@@ -1,17 +1,17 @@
 """Skip dialog task for Infinity Nikki.
 
 Automatically skips story dialogues and cutscenes.
-Pattern: inherits BaseTask + TriggerTask (like ok-ww SkipDialogTask).
+Pattern: inherits TriggerTask (which extends BaseTask, like ok-ww AutoDialogTask).
 """
 
-from ok import BaseTask, TriggerTask, Logger
+from ok import TriggerTask, Logger
 
 from src.features import SKIP_BUTTON
 
 logger = Logger.get_logger(__name__)
 
 
-class SkipDialogTask(BaseTask, TriggerTask):
+class SkipDialogTask(TriggerTask):
     """Auto-skip dialogues in Infinity Nikki."""
 
     def __init__(self, *args, **kwargs):

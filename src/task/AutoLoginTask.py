@@ -1,17 +1,17 @@
 """Auto login task for Infinity Nikki.
 
 Detects the login button on the login screen and clicks it.
-Pattern: inherits BaseTask + TriggerTask (like ok-ww AutoLoginTask).
+Pattern: inherits TriggerTask (which extends BaseTask, like ok-ww AutoLoginTask).
 """
 
-from ok import BaseTask, TriggerTask, Logger
+from ok import TriggerTask, Logger
 
 from src.features import LOGIN_BUTTON
 
 logger = Logger.get_logger(__name__)
 
 
-class AutoLoginTask(BaseTask, TriggerTask):
+class AutoLoginTask(TriggerTask):
     """Automatically login to Infinity Nikki."""
 
     def __init__(self, *args, **kwargs):
