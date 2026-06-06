@@ -130,15 +130,15 @@ class DailyTask(BaseTask):
 
         self._navigate_to_hud()
 
-        if self.get_config("美鸭梨挖掘"):
+        if self.config.get("美鸭梨挖掘"):
             self._pear_pal_mining()
-        if self.get_config("邮件领取"):
+        if self.config.get("邮件领取"):
             self._claim_mail()
-        if self.get_config("奇迹之旅"):
+        if self.config.get("奇迹之旅"):
             self._miracle_journey()
-        if self.get_config("幻境挑战"):
+        if self.config.get("幻境挑战"):
             self._realm_challenge()
-        if self.get_config("朝夕心愿"):
+        if self.config.get("朝夕心愿"):
             self._daily_wishes()
 
         self.info_set("Status", "Completed")
@@ -277,7 +277,7 @@ class DailyTask(BaseTask):
     # ── 4. 幻境挑战 ────────────────────────────────────────
 
     def _realm_challenge(self):
-        realm_type = self.get_config("幻境类型")
+        realm_type = self.config.get("幻境类型")
         self.log_info(f"Starting Realm Challenge: {realm_type}")
         self.info_set("Step", f"幻境: {realm_type}")
 
@@ -521,7 +521,7 @@ class DailyTask(BaseTask):
             return
         self.wait_click_feature(WISH_ENERGY, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         self.wait_click_feature(WISH_GO, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        realm_type = self.get_config("幻境类型")
+        realm_type = self.config.get("幻境类型")
         vitality = self._read_vitality()
         if not self.find_one(REALM_TRIAL, threshold=0.7):
             self._navigate_to_realm()
@@ -551,5 +551,5 @@ class DailyTask(BaseTask):
 
 if __name__ == "__main__":
     from ok import run_task
-    from config import config
+    from src.config import config
     run_task(config, task=DailyTask, debug=True)
