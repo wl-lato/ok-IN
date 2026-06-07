@@ -193,11 +193,11 @@ class DailyTask(BaseTask):
             self.send_key("esc", after_sleep=1)
 
         # 美鸭梨挖掘 (1.1.0)
-        self.wait_click_feature(PEARPAL_MINING, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=1)
+        self.wait_click_feature(PEARPAL_MINING, time_out=3, raise_if_not_found=True, after_sleep=1)
         # 领取 (1.1.1)
-        self.wait_click_feature(MINING_CLAIM, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(MINING_CLAIM, time_out=3, raise_if_not_found=False, after_sleep=0.5)
         # 再次挖掘 (1.1.2)
-        self.wait_click_feature(MINING_REDIG, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(MINING_REDIG, time_out=3, raise_if_not_found=False, after_sleep=0.5)
         # 返回
         self._go_back()
         self.log_info("Pear-Pal mining done.")
@@ -217,9 +217,9 @@ class DailyTask(BaseTask):
                 self.send_key("esc", after_sleep=1)
 
         # 邮件 (1.2.0)
-        self.wait_click_feature(PEARPAL_MAIL, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=1)
+        self.wait_click_feature(PEARPAL_MAIL, time_out=3, raise_if_not_found=True, after_sleep=1)
         # 领取 (1.2.1)
-        self.wait_click_feature(MAIL_CLAIM, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(MAIL_CLAIM, time_out=3, raise_if_not_found=False, after_sleep=0.5)
         # 领完标志
         self._check_claim_done()
         # 返回
@@ -245,7 +245,7 @@ class DailyTask(BaseTask):
         skip = self.find_one(JOURNEY_SKIP, threshold=0.8)
         if skip:
             self.send_key("f", after_sleep=0.5)
-            self.wait_click_feature(JOURNEY_SKIP2, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+            self.wait_click_feature(JOURNEY_SKIP2, time_out=3, raise_if_not_found=False, after_sleep=0.5)
 
         # 任务列表 (2.3 或 E键)
         tasks_btn = self.find_one(JOURNEY_TASKS, threshold=0.8)
@@ -255,7 +255,7 @@ class DailyTask(BaseTask):
             self.send_key("e", after_sleep=1)
 
         # 一键领取 (2.4)
-        self.wait_click_feature(JOURNEY_CLAIM, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(JOURNEY_CLAIM, time_out=3, raise_if_not_found=False, after_sleep=0.5)
         self._check_claim_done()
 
         # 奖励页面 (2.5 或 Q键)
@@ -266,7 +266,7 @@ class DailyTask(BaseTask):
             self.send_key("q", after_sleep=1)
 
         # 一键领取 (2.4)
-        self.wait_click_feature(JOURNEY_CLAIM, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(JOURNEY_CLAIM, time_out=3, raise_if_not_found=False, after_sleep=0.5)
         self._check_claim_done()
 
         # 返回HUD
@@ -305,7 +305,7 @@ class DailyTask(BaseTask):
             self.click_box(cal_btn, after_sleep=1)
         else:
             self.send_key("l", after_sleep=1)
-        self.wait_click_feature(CALENDAR_REALM, threshold=0.8, time_out=5, raise_if_not_found=True, after_sleep=1)
+        self.wait_click_feature(CALENDAR_REALM, time_out=5, raise_if_not_found=True, after_sleep=1)
 
     def _read_vitality(self):
         """Read current vitality via OCR around 3.2.1 area."""
@@ -332,10 +332,10 @@ class DailyTask(BaseTask):
     def _realm_trial(self, vitality):
         if not self._check_vitality(vitality, VITALITY_COST_TRIAL):
             return
-        self.wait_click_feature(REALM_TRIAL, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(TRIAL_QUICK, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(TRIAL_MAX_Y, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(TRIAL_CLAIM, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(REALM_TRIAL, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(TRIAL_QUICK, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(TRIAL_MAX_Y, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(TRIAL_CLAIM, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         self._check_claim_done()
         self._go_back()
 
@@ -344,10 +344,10 @@ class DailyTask(BaseTask):
     def _realm_blessing(self, vitality):
         if not self._check_vitality(vitality, VITALITY_COST_BLESSING):
             return
-        self.wait_click_feature(REALM_BLESSING, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(TRIAL_QUICK, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(TRIAL_MAX_Y, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(TRIAL_CLAIM, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(REALM_BLESSING, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(TRIAL_QUICK, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(TRIAL_MAX_Y, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(TRIAL_CLAIM, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         self._check_claim_done()
         self._go_back()
 
@@ -356,10 +356,10 @@ class DailyTask(BaseTask):
     def _realm_escalation(self, vitality):
         if not self._check_vitality(vitality, VITALITY_COST_ESCALATION):
             return
-        self.wait_click_feature(REALM_ESCALATION, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(ESCALATION_GO, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=1)
+        self.wait_click_feature(REALM_ESCALATION, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(ESCALATION_GO, time_out=3, raise_if_not_found=True, after_sleep=1)
         # 等待幻境内 (3.2.4.2)
-        self.wait_feature(ESCALATION_INSIDE, threshold=0.8, time_out=30, raise_if_not_found=True)
+        self.wait_feature(ESCALATION_INSIDE, time_out=30, raise_if_not_found=True)
         # 走向激化台
         for _ in range(20):
             self.send_key("w", after_sleep=0.3)
@@ -370,19 +370,19 @@ class DailyTask(BaseTask):
             return
         self.send_key("f", after_sleep=1)
         # 选择
-        self.wait_click_feature(ESCALATION_BUBBLE, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.3)
-        self.wait_click_feature(ESCALATION_QUALITY, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.3)
-        self.wait_click_feature(ESCALATION_QUANTITY, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.3)
-        self.wait_click_feature(ESCALATION_SORT, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.3)
+        self.wait_click_feature(ESCALATION_BUBBLE, time_out=3, raise_if_not_found=True, after_sleep=0.3)
+        self.wait_click_feature(ESCALATION_QUALITY, time_out=3, raise_if_not_found=True, after_sleep=0.3)
+        self.wait_click_feature(ESCALATION_QUANTITY, time_out=3, raise_if_not_found=True, after_sleep=0.3)
+        self.wait_click_feature(ESCALATION_SORT, time_out=3, raise_if_not_found=True, after_sleep=0.3)
         # 红框区域
         redbox = self.find_one(ESCALATION_REDBOX, threshold=0.7)
         if redbox:
             self.click_box(redbox, after_sleep=0.3)
         else:
             self.log_info("Could not find red box area.")
-        self.wait_click_feature(ESCALATION_MAX_Y, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.3)
-        self.wait_click_feature(CONFIRM_BUTTON, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(ESCALATION_ACTIVATE, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(ESCALATION_MAX_Y, time_out=3, raise_if_not_found=True, after_sleep=0.3)
+        self.wait_click_feature(CONFIRM_BUTTON, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(ESCALATION_ACTIVATE, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         self.send_key("f", after_sleep=0.5)
         self._check_claim_done()
         # 退出
@@ -435,7 +435,7 @@ class DailyTask(BaseTask):
             self.click_box(cal_btn, after_sleep=1)
         else:
             self.send_key("l", after_sleep=1)
-        self.wait_click_feature(CALENDAR_DAILY, threshold=0.8, time_out=5, raise_if_not_found=True, after_sleep=1)
+        self.wait_click_feature(CALENDAR_DAILY, time_out=5, raise_if_not_found=True, after_sleep=1)
 
     def _read_inspiration(self):
         progress_area = self.find_one(DAILY_PROGRESS, threshold=0.7)
@@ -450,7 +450,7 @@ class DailyTask(BaseTask):
         return 0
 
     def _claim_daily_reward(self):
-        self.wait_click_feature(DAILY_CLAIM_REWARD, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(DAILY_CLAIM_REWARD, time_out=3, raise_if_not_found=False, after_sleep=0.5)
 
     def _detect_available_tasks(self):
         available = []
@@ -493,23 +493,23 @@ class DailyTask(BaseTask):
         self._navigate_to_hud()
         self.send_key("p", after_sleep=1)
         self.send_key("space", after_sleep=0.5)
-        self.wait_click_feature(PHOTO_DELETE, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.3)
-        self.wait_click_feature(CONFIRM_BUTTON, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.3)
+        self.wait_click_feature(PHOTO_DELETE, time_out=3, raise_if_not_found=False, after_sleep=0.3)
+        self.wait_click_feature(CONFIRM_BUTTON, time_out=3, raise_if_not_found=False, after_sleep=0.3)
         self._go_back()
 
     def _wish_task_upgrade(self):
         """4.2 - 升级祝福闪光"""
         self.log_info("Wish task: 升级祝福闪光")
-        self.wait_click_feature(WISH_UPGRADE, threshold=0.8, time_out=3, raise_if_not_found=False, after_sleep=0.5)
-        self.wait_click_feature(WISH_GO, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=1)
-        self.wait_click_feature(WISH_SORT, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(WISH_UPGRADE_BTN, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(WISH_SELECT_MAT, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(WISH_ADD, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.3)
+        self.wait_click_feature(WISH_UPGRADE, time_out=3, raise_if_not_found=False, after_sleep=0.5)
+        self.wait_click_feature(WISH_GO, time_out=3, raise_if_not_found=True, after_sleep=1)
+        self.wait_click_feature(WISH_SORT, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_UPGRADE_BTN, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_SELECT_MAT, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_ADD, time_out=3, raise_if_not_found=True, after_sleep=0.3)
         for _ in range(4):
-            self.wait_click_feature(WISH_ADD_ONE, threshold=0.8, time_out=2, raise_if_not_found=True, after_sleep=0.2)
-        self.wait_click_feature(CONFIRM_BUTTON, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(WISH_UPGRADE_BTN, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+            self.wait_click_feature(WISH_ADD_ONE, time_out=2, raise_if_not_found=True, after_sleep=0.2)
+        self.wait_click_feature(CONFIRM_BUTTON, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_UPGRADE_BTN, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         self._check_claim_done()
         self._go_back(2)
 
@@ -519,8 +519,8 @@ class DailyTask(BaseTask):
         if self.find_one(WISH_ESCALATION, threshold=0.8):
             self.log_info("素材激化 task exists, treating energy task as done.")
             return
-        self.wait_click_feature(WISH_ENERGY, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(WISH_GO, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_ENERGY, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_GO, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         realm_type = self.config.get("幻境类型")
         vitality = self._read_vitality()
         if not self.find_one(REALM_TRIAL, threshold=0.7):
@@ -540,8 +540,8 @@ class DailyTask(BaseTask):
     def _wish_task_escalation(self):
         """4.5 - 素材激化"""
         self.log_info("Wish task: 素材激化")
-        self.wait_click_feature(WISH_ESCALATION, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
-        self.wait_click_feature(WISH_GO, threshold=0.8, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_ESCALATION, time_out=3, raise_if_not_found=True, after_sleep=0.5)
+        self.wait_click_feature(WISH_GO, time_out=3, raise_if_not_found=True, after_sleep=0.5)
         vitality = self._read_vitality() or 999
         if not self.find_one(REALM_TRIAL, threshold=0.7):
             self._navigate_to_realm()
