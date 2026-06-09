@@ -52,8 +52,8 @@ config = {
     "wait_until_settle_time": 0,
     "template_matching": {
         "coco_feature_json": os.path.join("assets", "coco_annotations.json"),
-        "default_horizontal_variance": 0.002,
-        "default_vertical_variance": 0.002,
+        "default_horizontal_variance": 1,  # Full-screen search: COCO bbox from composite image, not game screenshot
+        "default_vertical_variance": 1,    # Full-screen search: COCO bbox from composite image, not game screenshot
         "default_threshold": 0.8,
         "vcenter_features": ["monthly_card"],
         "hcenter_features": ["monthly_card"],
