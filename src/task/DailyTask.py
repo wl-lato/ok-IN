@@ -12,7 +12,10 @@ Complete daily workflow based on logic doc:
 6. 朝夕心愿 (Daily Wishes)
 """
 
+import os
 import re
+
+import cv2
 
 from ok import BaseTask, Logger
 
@@ -128,6 +131,12 @@ class DailyTask(BaseTask):
         self.log_info("Starting daily task...")
         self.info_set("Status", "Running")
 
+        # Load alpha-channel masks for template matching
+        # This is critical: standalone PNG icons have transparent backgrounds,
+        # but the composite image fills transparency with a solid color.
+        # Without masks, the background mismatch causes all template matching to fail.
+        self._setup_feature_masks()
+
         self._navigate_to_hud()
 
         if self.config.get("美鸭梨挖掘"):
@@ -143,6 +152,76 @@ class DailyTask(BaseTask):
 
         self.info_set("Status", "Completed")
         self.log_info("Daily task completed!", notify=True)
+
+    # ── Feature Mask Setup ──────────────────────────────────
+
+    def _setup_feature_masks(self):
+        """Load alpha-channel masks from original PNG icons and assign to features.
+
+        The composite image (assets/images/0.png) is RGB — transparent areas in the
+        original PNGs become solid gray pixels.  When FeatureSet crops a template
+        from the composite, those solid-gray backgrounds don't match the game scene
+        behind the icon, causing template matching to fail.
+
+        The fix: extract each icon's alpha channel as a binary mask, resize it to
+        match the template dimensions, and assign it to the Feature object.
+        cv2.matchTemplate will then ignore background pixels (mask==0) and only
+        compare icon pixels (mask==255).
+        """
+        features_dir = os.path.join(os.getcwd(), 'features')
+        if not os.path.isdir(features_dir):
+            self.log_info("Features directory not found, skipping mask setup.")
+            return
+
+        # Set feature_processor so masks are auto-loaded when features are reloaded
+        # (e.g. after resolution change clears the feature_dict)
+        self.feature_set.feature_processor = self._load_feature_mask
+
+        # Apply masks to already-loaded features
+        applied = 0
+        for name, feature in list(self.feature_set.feature_dict.items()):
+            if feature.mask is None:
+                self._load_feature_mask(name, feature)
+                if feature.mask is not None:
+                    applied += 1
+
+        if applied > 0:
+            self.log_info(f"Applied {applied} alpha-channel masks to features.")
+
+    def _load_feature_mask(self, feature_name, feature):
+        """Load alpha-channel mask for a single feature from its original PNG file."""
+        if feature.mask is not None:
+            return  # Already has a mask
+
+        # Strip namespace prefix if present (e.g. "import/feature_name")
+        png_name = feature_name.split('/')[-1] if '/' in feature_name else feature_name
+
+        png_path = os.path.join(os.getcwd(), 'features', f'{png_name}.png')
+        if not os.path.exists(png_path):
+            return
+
+        # Read PNG with alpha channel (IMREAD_UNCHANGED = -1)
+        img = cv2.imread(png_path, cv2.IMREAD_UNCHANGED)
+        if img is None:
+            return
+
+        # Check if image has alpha channel
+        if len(img.shape) < 3 or img.shape[2] < 4:
+            return  # No alpha channel, no mask needed
+
+        # Extract alpha channel and create binary mask
+        alpha = img[:, :, 3]
+        mask = ((alpha > 127).astype('uint8')) * 255
+
+        # Check if there are any transparent pixels — if not, no mask needed
+        if mask.min() == 255:
+            return  # Fully opaque, mask not useful
+
+        # Resize mask to match template dimensions
+        th, tw = feature.mat.shape[:2]
+        if tw > 0 and th > 0:
+            mask = cv2.resize(mask, (tw, th), interpolation=cv2.INTER_NEAREST)
+            feature.mask = mask
 
     # ── Navigation Helpers ─────────────────────────────────
 
