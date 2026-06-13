@@ -21,7 +21,7 @@ class AutoLoginTask(BaseINTask, TriggerTask):
     """Automatically login to Infinity Nikki after game starts.
 
     Aligned with ok-ww AutoLoginTask:
-    - Uses logged_in property (via og.my_app._in_hud)
+    - Uses logged_in property (via og.my_app.logged_in)
     - Uses scene.in_team() for lazy-load caching
     - Waits for in_team_and_world() confirmation after clicking login
     """

@@ -51,14 +51,14 @@ class BaseINTask(BaseTask):
     def logged_in(self):
         """Check if user is logged in.
 
-        Stored in og.my_app._in_hud (set by Globals class in src/globals.py).
+        Stored in og.my_app.logged_in (set by Globals class in src/globals.py).
         This mirrors ok-ww's pattern where logged_in is stored in Globals.
         """
-        return getattr(og.my_app, "_in_hud", False)
+        return getattr(og.my_app, "logged_in", False)
 
     @logged_in.setter
     def logged_in(self, value):
-        og.my_app._in_hud = value
+        og.my_app.logged_in = value
 
     # ── Monthly card helpers ────────────────────────────────
 

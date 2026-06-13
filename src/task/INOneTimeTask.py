@@ -1,10 +1,12 @@
 """INOneTimeTask: mixin for one-time tasks in Infinity Nikki.
 
 Mirrors src/task/WWOneTimeTask.py from ok-ww.
-Runs mouse reset and activates interaction before executing the task.
-"""
+Activates PostMessageInteraction before executing the task.
 
-from ok import BrowserInteraction, PostMessageInteraction
+Note: ok-ww also runs MouseResetTask here, but ok-IN does not have
+a MouseResetTask (no mouse displacement issue in Infinity Nikki).
+"""
+from ok import PostMessageInteraction
 
 
 class INOneTimeTask:
@@ -15,14 +17,6 @@ class INOneTimeTask:
     """
 
     def run(self):
-        # Activate mouse reset if available
-        try:
-            from src.task.MouseResetTask import MouseResetTask
-            mouse_reset_task = self.executor.get_task_by_class(MouseResetTask)
-            mouse_reset_task.run()
-        except Exception:
-            pass
-
         # Activate interaction for PostMessageInteraction
         if isinstance(self.executor.interaction, PostMessageInteraction):
             self.executor.interaction.activate()

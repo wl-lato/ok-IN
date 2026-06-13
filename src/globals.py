@@ -12,20 +12,12 @@ class Globals(QObject):
     """Global state holder for Infinity Nikki.
 
     Mirrors ok-ww/src/globals.py pattern.
+    Uses logged_in attribute (same name as ok-ww) for cross-task state sharing.
     """
 
     def __init__(self, exit_event):
         super().__init__()
-        self._in_hud = False
-
-    @property
-    def in_hud(self):
-        return self._in_hud
-
-    @in_hud.setter
-    def in_hud(self, value):
-        self._in_hud = value
-        logger.debug(f"in_hud set to {value}")
+        self.logged_in = False
 
 
 if __name__ == "__main__":

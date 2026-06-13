@@ -76,8 +76,8 @@ config = {
         "default_vertical_variance": 1,
         "default_threshold": 0.8,
         "feature_processor": process_feature,
-        "vcenter_features": ["monthly_card"],
-        "hcenter_features": ["monthly_card"],
+        "vcenter_features": [],
+        "hcenter_features": [],
     },
     "windows": {
         "top_hwnd_class": [

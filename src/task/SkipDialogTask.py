@@ -7,6 +7,7 @@ Aligned with ok-ww/src/task/SkipDialogTask.py and SkipBaseTask.py:
 - Handles skip confirm dialog, skip button, dialog eye, etc.
 """
 
+import time
 from ok import TriggerTask, Logger
 
 from src.Labels import Labels
