@@ -1,51 +1,64 @@
-"""Infinity Nikki scene detection module.
+"""INScene: scene state cache for Infinity Nikki.
 
-Extends ok.BaseScene for state caching.
-BaseScene only has reset() method; actual scene detection is done in tasks via find_one().
-
-Scene states are tracked as instance attributes (not class constants)
-because scene detection depends on runtime UI recognition.
+Mirrors src/scene/WWScene.py from ok-ww.
+Lazy-loading cache pattern: scene states are computed once and cached
+until reset() is called by the task executor.
 """
 
-from ok import BaseScene
+from ok import BaseScene, Logger
+
+logger = Logger.get_logger(__name__)
 
 
 class INScene(BaseScene):
     """Scene state cache for Infinity Nikki.
 
-    Scene states are detected by tasks and cached here for cross-task access.
-    reset() is called by the task executor between tasks.
+    Mirrors WWScene from ok-ww.
+    All cached scene checks use lazy-loading: computed once on first access,
+    then cached until reset() is called.
     """
-
-    SCENE_UNKNOWN = 0
-    SCENE_LOADING = 1
-    SCENE_IN_GAME = 2       # HUD visible (main game screen)
-    SCENE_DAILY_WISHES = 3  # 朝夕心愿 page open
-    SCENE_REALM = 4         # 幻境 page open
-    SCENE_JOURNEY = 5       # 奇迹之旅 page open
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._in_team = None
         self._in_hud = None
-        self._current_scene = self.SCENE_UNKNOWN
 
     def reset(self):
-        """Reset cached scene state."""
+        """Reset all cached scene states.
+
+        Called by the task executor between tasks.
+        """
+        self._in_team = None
         self._in_hud = None
-        self._current_scene = self.SCENE_UNKNOWN
 
-    @property
-    def current_scene(self):
-        return self._current_scene
+    def in_team(self, fun):
+        """Lazy-load cached in_team state.
 
-    @current_scene.setter
-    def current_scene(self, value):
-        self._current_scene = value
+        Mirrors WWScene.in_team() pattern.
 
-    def in_hud(self):
+        Args:
+            fun: Callable that performs the actual detection.
+
+        Returns:
+            Cached or freshly computed team state.
+        """
+        if self._in_team is None:
+            self._in_team = fun()
+        return self._in_team
+
+    def in_hud(self, fun=None):
+        """Lazy-load cached in_hud state.
+
+        If fun is None, return the cached value directly.
+        Otherwise compute via fun and cache.
+        """
+        if fun is None:
+            return self._in_hud
+        if self._in_hud is None:
+            self._in_hud = fun()
         return self._in_hud
 
     def set_in_hud(self, value=True):
+        """Manually set the in_hud cached state."""
         self._in_hud = value
-        if value:
-            self._current_scene = self.SCENE_IN_GAME
+        return value

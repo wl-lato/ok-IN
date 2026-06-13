@@ -1,3 +1,14 @@
+"""config.py for Infinity Nikki - aligned with ok-ww structure.
+
+Key alignment points vs ok-ww:
+- 'feature_processor': registered as imported function (not string)
+- 'my_app': registered to provide Globals with shared state
+- vcenter_features / hcenter_features for centered features
+- vcenter/hcenter variance is set to 1 because COCO annotations come from
+  a composite image (not real game screenshots); once real screenshots are
+  available, change to ok-ww's 0.002 values.
+"""
+
 import os
 import re
 from pathlib import Path
@@ -5,6 +16,9 @@ from pathlib import Path
 from ok import Box, ConfigOption
 
 version = "dev"
+
+# Import feature processor directly (required by ok-script FeatureSet)
+from src.task.process_feature import process_feature
 
 
 def calculate_pc_exe_path(running_path):
@@ -48,13 +62,20 @@ config = {
             "use_npu": True,
         },
     },
+    # Aligned with ok-ww: 'my_app' provides shared state (logged_in, etc.)
+    "my_app": ["src.globals", "Globals"],
     "start_timeout": 120,
     "wait_until_settle_time": 0,
+    # Aligned with ok-ww: feature_processor registered as imported callable
     "template_matching": {
         "coco_feature_json": os.path.join("assets", "coco_annotations.json"),
-        "default_horizontal_variance": 1,  # Full-screen search: COCO bbox from composite image, not game screenshot
-        "default_vertical_variance": 1,    # Full-screen search: COCO bbox from composite image, not game screenshot
+        # NOTE: variance=1 because COCO annotations are from composite images,
+        # not real game screenshots. This makes FeatureSet search the full screen.
+        # When real screenshots are available, change to ok-ww values: 0.002
+        "default_horizontal_variance": 1,
+        "default_vertical_variance": 1,
         "default_threshold": 0.8,
+        "feature_processor": process_feature,
         "vcenter_features": ["monthly_card"],
         "hcenter_features": ["monthly_card"],
     },
@@ -64,6 +85,7 @@ config = {
             re.compile("CLoginDlg_P_"),
             "CefBrowserWindow",
             "Chrome_RenderWidgetHostHWND",
+            "#32770",
             re.compile("CNativeLoginDlg"),
             "Static",
             "ComboBox",
@@ -103,13 +125,13 @@ config = {
     },
     "about": """
     <p style="color:red;">
-    <strong>本软件是免费开源的。</strong> 如果你被收费，请立即退款。
+        <strong>本软件是免费开源的。</strong> 如果你被收费，请立即退款。
     </p>
     <p style="color:red;">
-    <strong>本软件仅供个人使用，用于学习Python编程、计算机视觉、UI自动化等。</strong> 请勿将其用于任何营利性或商业用途。
+        <strong>本软件仅供个人使用，用于学习Python编程、计算机视觉、UI自动化等。</strong> 请勿将其用于任何营利性或商业用途。
     </p>
     <p style="color:red;">
-    <strong>使用本软件可能会导致账号被封。</strong> 请在了解风险后再使用。
+        <strong>使用本软件可能会导致账号被封。</strong> 请在了解风险后再使用。
     </p>
     """,
     "screenshots_folder": "screenshots",
