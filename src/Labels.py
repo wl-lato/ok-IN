@@ -8,6 +8,7 @@ class Labels(str, Enum):
     claim_done = "claim_done"
     skip_button = "skip_button"
     login_button = "login_button"
+    monthly_card = "monthly_card"
 
     # ── 1 - 美鸭梨平板 ────────────────────────────────────
     hud_pearpal = "hud_pearpal"
